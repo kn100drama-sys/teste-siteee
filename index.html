@@ -1,31 +1,293 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Meu App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<title>Notificador</title>
 
-<script>
-window.OneSignalDeferred = window.OneSignalDeferred || [];
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#111111">
 
-OneSignalDeferred.push(async function(OneSignal) {
+<style>
 
-  await OneSignal.init({
-    appId: "5e5f2de8-6b5c-418e-9d52-d08436d2db20",
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-    notifyButton: {
-      enable: true
-    }
-  });
+body{
+    background:#0f1117;
+    color:#fff;
+    padding:20px;
+}
 
-});
-</script>
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+.card{
+    background:#181c25;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 0 20px rgba(0,0,0,.3);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+input,
+textarea,
+button{
+    width:100%;
+    border:none;
+    border-radius:12px;
+    margin-top:10px;
+}
+
+input,
+textarea{
+    background:#232838;
+    color:#fff;
+    padding:12px;
+}
+
+textarea{
+    resize:none;
+    min-height:100px;
+}
+
+button{
+    padding:14px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn-now{
+    background:#3b82f6;
+    color:#fff;
+}
+
+.btn-schedule{
+    background:#8b5cf6;
+    color:#fff;
+}
+
+.preview{
+    margin-top:15px;
+    text-align:center;
+}
+
+.preview img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:12px;
+}
+
+.history{
+    margin-top:20px;
+}
+
+.item{
+    background:#232838;
+    padding:10px;
+    border-radius:10px;
+    margin-top:8px;
+}
+
+.small{
+    opacity:.7;
+    font-size:12px;
+}
+
+</style>
 
 </head>
 <body>
 
-<h1>Meu Aplicativo</h1>
+<div class="container">
+
+<div class="card">
+
+<h1>🔔 Notificador</h1>
+
+<input
+id="titulo"
+placeholder="Título da notificação">
+
+<textarea
+id="mensagem"
+placeholder="Mensagem"></textarea>
+
+<input
+id="imagem"
+type="file"
+accept="image/*">
+
+<div class="preview">
+<img id="preview"
+style="display:none;">
+</div>
+
+<input
+id="minutos"
+type="number"
+placeholder="Minutos para agendar">
+
+<button
+class="btn-now"
+onclick="enviarAgora()">
+🚀 Enviar Agora </button>
+
+<button
+class="btn-schedule"
+onclick="agendar()">
+⏰ Agendar </button>
+
+<div class="history">
+
+<h3>Histórico</h3>
+
+<div id="historico"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js');
+}
+
+Notification.requestPermission();
+
+let imagemSelecionada = '';
+
+const preview =
+document.getElementById('preview');
+
+document
+.getElementById('imagem')
+.addEventListener('change',e=>{
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    imagemSelecionada =
+    URL.createObjectURL(file);
+
+    preview.src =
+    imagemSelecionada;
+
+    preview.style.display =
+    'block';
+});
+
+function adicionarHistorico(
+titulo,
+mensagem){
+
+    const div =
+    document.createElement('div');
+
+    div.className='item';
+
+    div.innerHTML=`
+        <b>${titulo}</b><br>
+        ${mensagem}
+        <div class="small">
+        ${new Date().toLocaleString()}
+        </div>
+    `;
+
+    document
+    .getElementById('historico')
+    .prepend(div);
+}
+
+function criarNotificacao(){
+
+    const titulo =
+    document
+    .getElementById('titulo')
+    .value;
+
+    const mensagem =
+    document
+    .getElementById('mensagem')
+    .value;
+
+    if(!titulo){
+        alert('Digite um título');
+        return;
+    }
+
+    new Notification(
+        titulo,
+        {
+            body:mensagem,
+            icon:imagemSelecionada || ''
+        }
+    );
+
+    adicionarHistorico(
+        titulo,
+        mensagem
+    );
+}
+
+function enviarAgora(){
+
+    if(Notification.permission !== 'granted'){
+        alert(
+        'Permita notificações'
+        );
+        return;
+    }
+
+    criarNotificacao();
+}
+
+function agendar(){
+
+    const minutos =
+    Number(
+    document
+    .getElementById('minutos')
+    .value
+    );
+
+    if(!minutos){
+        alert(
+        'Informe os minutos'
+        );
+        return;
+    }
+
+    setTimeout(
+        criarNotificacao,
+        minutos * 60000
+    );
+
+    alert(
+    'Notificação agendada para '
+    + minutos +
+    ' minuto(s)'
+    );
+}
+
+</script>
 
 </body>
 </html>
