@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Meu App</title>
+
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+<script>
+window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+OneSignalDeferred.push(async function(OneSignal) {
+
+  await OneSignal.init({
+    appId: "5e5f2de8-6b5c-418e-9d52-d08436d2db20",
+
+    notifyButton: {
+      enable: true
+    }
+  });
+
+});
+</script>
+
+</head>
+<body>
+
+<h1>Meu Aplicativo</h1>
+
+</body>
+</html>
