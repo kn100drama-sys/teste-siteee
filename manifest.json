@@ -1,21 +1,24 @@
 {
-  "name": "Notificador",
-  "short_name": "Notificador",
-  "description": "Aplicativo de notificações locais",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#111111",
-  "theme_color": "#111111",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+"name": "Notificador",
+"short_name": "Notificador",
+"description": "Aplicativo de notificações locais",
+"start_url": "/",
+"scope": "/",
+"display": "standalone",
+"orientation": "portrait",
+"background_color": "#111111",
+"theme_color": "#111111",
+"icons": [
+{
+"src": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/nubank-icon.png",
+"sizes": "192x192",
+"type": "image/png"
+},
+{
+"src": "https://logodownload.org/wp-content/uploads/2019/08/nubank-logo-0.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any maskable"
+}
+]
 }
